@@ -1,7 +1,11 @@
 module Main where
 
--- 式パーサーモジュールをインポート
-import ExprParser
+-- 新しいモジュール構造をインポート
+import AST ()
+import Parser (parseExpr)
+import Eval (eval)
+import Calculus (differentiate, integrate)
+import Utils (freeVars, showExpr)
 -- Mapモジュールをインポート（変数環境用）
 import qualified Data.Map as M
 
