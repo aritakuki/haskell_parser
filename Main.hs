@@ -1,62 +1,68 @@
 module Main where
 
+-- 式パーサーモジュールをインポート
 import ExprParser
+-- Mapモジュールをインポート（変数環境用）
 import qualified Data.Map as M
 
+-- main: デモプログラムのエントリーポイント
+-- 階乗、記号的微分、記号的積分、数値評価のデモを実行
 main :: IO ()
 main = do
 
   putStrLn "=== Expression Parser Demo ==="
   putStrLn ""
 
-  -- Factorial
+  -- 階乗のデモ
 
   putStrLn "--- Factorial ---"
 
-  testParse "3!"
-  testParse "5!"
-  testParse "3! + 2!"
+  testParse "3!"  -- 3! = 6
+  testParse "5!"  -- 5! = 120
+  testParse "3! + 2!"  -- 6 + 2 = 8
 
   putStrLn ""
 
-  -- Differentiation
+  -- 記号的微分のデモ
 
   putStrLn "--- Symbolic Differentiation ---"
 
-  testDifferentiate "x" "x^2"
-  testDifferentiate "x" "x^3"
-  testDifferentiate "x" "sin(x)"
-  testDifferentiate "x" "cos(x)"
-  testDifferentiate "x" "x^3 + 2*x"
-  testDifferentiate "x" "x * x"
+  testDifferentiate "x" "x^2"  -- 2x
+  testDifferentiate "x" "x^3"  -- 3x²
+  testDifferentiate "x" "sin(x)"  -- cos(x)
+  testDifferentiate "x" "cos(x)"  -- -sin(x)
+  testDifferentiate "x" "x^3 + 2*x"  -- 3x² + 2
+  testDifferentiate "x" "x * x"  -- x + x
 
   putStrLn ""
 
-  -- Integration
+  -- 記号的積分のデモ
 
   putStrLn "--- Symbolic Integration ---"
 
-  testIntegrate "x" "x^2"
-  testIntegrate "x" "x^3"
-  testIntegrate "x" "sin(x)"
-  testIntegrate "x" "cos(x)"
-  testIntegrate "x" "x^3 + 2*x"
-  testIntegrate "x" "5"
+  testIntegrate "x" "x^2"  -- x³/3
+  testIntegrate "x" "x^3"  -- x⁴/4
+  testIntegrate "x" "sin(x)"  -- -cos(x)
+  testIntegrate "x" "cos(x)"  -- sin(x)
+  testIntegrate "x" "x^3 + 2*x"  -- x⁴/4 + x²
+  testIntegrate "x" "5"  -- 5x
 
   putStrLn ""
 
-  -- Evaluation
+  -- 数値評価のデモ
 
   putStrLn "--- Evaluation ---"
 
-  testEval "3 + 2 * 5" [("x","5")]
-  testEval "x + 10" [("x","5")]
-  testEval "3!" []
+  testEval "3 + 2 * 5" [("x","5")]  -- 13
+  testEval "x + 10" [("x","5")]  -- 15
+  testEval "3!" []  -- 6
 
   putStrLn ""
 
   putStrLn "=== Done ==="
 
+-- testParse: パースと評価のテスト関数
+-- 入力文字列をパースして、ASTと評価結果を表示
 testParse :: String -> IO ()
 testParse input =
   case parseExpr input of
@@ -78,6 +84,8 @@ testParse input =
 
       putStrLn ""
 
+-- testDifferentiate: 記号的微分のテスト関数
+-- 入力文字列をパースして、指定変数で微分した結果を表示
 testDifferentiate :: String -> String -> IO ()
 testDifferentiate variable input =
   case parseExpr input of
@@ -99,6 +107,8 @@ testDifferentiate variable input =
 
       putStrLn ""
 
+-- testIntegrate: 記号的積分のテスト関数
+-- 入力文字列をパースして、指定変数で積分した結果を表示
 testIntegrate :: String -> String -> IO ()
 testIntegrate variable input =
   case parseExpr input of
@@ -120,10 +130,13 @@ testIntegrate variable input =
 
       putStrLn ""
 
+-- prettyEnv: 変数環境を見やすい文字列に変換
 prettyEnv :: M.Map String Int -> String
 prettyEnv env =
   show (M.toList env)
 
+-- testEval: 数値評価のテスト関数
+-- 入力文字列をパースして、変数環境を与えて評価した結果を表示
 testEval :: String -> [(String,String)] -> IO ()
 testEval input bindings =
   case parseExpr input of
