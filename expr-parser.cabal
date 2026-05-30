@@ -11,7 +11,10 @@ build-type:         Simple
 
 executable expr-parser
     main-is:          Main.hs
-    build-depends:    base ^>=4.14
+    other-modules:
+        ExprParser
+
+    build-depends:    base
                     , parsec ^>=3.1
                     , containers
     hs-source-dirs:   .
